@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cosmic Pet Club — V1</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FAFAFA;
+    --white: #FFFFFF;
+    --border: #EBEBEB;
+    --border-strong: #D8D8D8;
+    --text-primary: #111111;
+    --text-secondary: #666666;
+    --text-tertiary: #AAAAAA;
+    --tag-bg: #F4F4F4;
+    --radius: 10px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 64px 32px 96px;
+  }
+
+  /* HEADER */
+  .header { margin-bottom: 48px; }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 14px;
+  }
+
+  .title {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    flex-wrap: wrap;
+  }
+
+  .meta-row .sep { color: var(--border-strong); }
+
+  /* DAILY PILLS */
+  .daily-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 44px;
+    flex-wrap: wrap;
+  }
+
+  .daily-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border-strong);
+    border-radius: 100px;
+    padding: 6px 14px 6px 10px;
+    background: var(--white);
+  }
+
+  .daily-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .daily-pill .time {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .daily-pill .tz {
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+
+  /* PROGRESS */
+  .progress-section { margin-bottom: 44px; }
+
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+  }
+
+  .progress-track {
+    height: 1.5px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 1%;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* WEEK */
+  .week-block { margin-bottom: 40px; }
+
+  .week-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .week-left {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .week-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  .week-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .week-dates {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+  }
+
+  /* TASKS */
+  .task-list { display: flex; flex-direction: column; }
+
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.12s;
+  }
+
+  .task-item:last-child { border-bottom: none; }
+  .task-item:hover { opacity: 0.65; }
+
+  .task-num {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    min-width: 18px;
+    padding-top: 2px;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .checkbox {
+    width: 15px; height: 15px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+    background: var(--white);
+  }
+
+  .task-item.done .checkbox {
+    background: var(--text-primary);
+    border-color: var(--text-primary);
+  }
+
+  .check-svg { display: none; }
+  .task-item.done .check-svg { display: block; }
+
+  .task-body {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .task-text {
+    font-size: 13.5px;
+    color: var(--text-primary);
+    line-height: 1.5;
+    flex: 1;
+    transition: color 0.12s;
+  }
+
+  .task-item.done .task-text {
+    color: var(--text-tertiary);
+    text-decoration: line-through;
+    text-decoration-color: #D0D0D0;
+  }
+
+  .task-tag {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 2px;
+  }
+
+  /* DAILY DETAIL */
+  .daily-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 500px) {
+    .daily-detail { grid-template-columns: 1fr; }
+  }
+
+  .daily-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  .daily-card-time {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+
+  .daily-card-tz {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-bottom: 16px;
+  }
+
+  .daily-card-items { display: flex; flex-direction: column; gap: 7px; }
+
+  .daily-card-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  .daily-card-item::before {
+    content: '—';
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+    font-size: 11px;
+    margin-top: 1px;
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 52px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-left {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  .footer-right { font-size: 11px; color: var(--text-tertiary); }
+
+  @media (max-width: 480px) {
+    .page { padding: 40px 20px 64px; }
+    .title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="eyebrow">Projeto V1 · Kickoff 26.03.2025</div>
+    <h1 class="title">Cosmic Pet Club</h1>
+    <div class="meta-row">
+      <span>2 semanas</span>
+      <span class="sep">·</span>
+      <span>17 tarefas</span>
+      <span class="sep">·</span>
+      <span>2 dailies por dia</span>
+    </div>
+  </div>
+
+  <div class="daily-row">
+    <div class="daily-pill">
+      <div class="daily-dot" style="background:#111"></div>
+      <span class="time">10h</span>
+      <span class="tz">Brasília · standup manhã</span>
+    </div>
+    <div class="daily-pill">
+      <div class="daily-dot" style="background:#bbb"></div>
+      <span class="time">18h</span>
+      <span class="tz">New York · sync tarde</span>
+    </div>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-top">
+      <span>progresso geral</span>
+      <span id="progress-label">0 / 17 tarefas</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-bar"></div>
+    </div>
+  </div>
+
+  <!-- SEMANA 1 -->
+  <div class="week-block">
+    <div class="week-head">
+      <div class="week-left">
+        <span class="week-label">Semana 1</span>
+        <span class="week-name">Estratégia, estrutura e interface</span>
+      </div>
+      <span class="week-dates">26.03 → 03.04</span>
+    </div>
+    <div class="task-list">
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">01</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Definição da tecnologia e estrutura do site com foco em escalabilidade</span>
+          <span class="task-tag">estrutura</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">02</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Desenho do layout com estrutura de slots</span>
+          <span class="task-tag">design</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">03</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Criação de componentes reutilizáveis — imagem, vídeo e texto</span>
+          <span class="task-tag">design</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">04</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Variações de estado de interface: ativo, desabilitado, alerta e erro</span>
+          <span class="task-tag">design</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">05</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Dinâmica / Canvas de tom verbal e estrutura narrativa</span>
+          <span class="task-tag">conteúdo</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">06</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Fluxo de detalhes dos produtos</span>
+          <span class="task-tag">fluxo</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">07</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Fluxo de contato</span>
+          <span class="task-tag">fluxo</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">08</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Fluxo de FAQ</span>
+          <span class="task-tag">fluxo</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">09</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Documentação para handoff e especificações técnicas</span>
+          <span class="task-tag">doc</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">10</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Protótipo navegável — experiência, confiabilidade, emoção e clareza nos produtos</span>
+          <span class="task-tag">protótipo</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SEMANA 2 -->
+  <div class="week-block">
+    <div class="week-head">
+      <div class="week-left">
+        <span class="week-label">Semana 2</span>
+        <span class="week-name">Jornada de pagamento e pós-venda</span>
+      </div>
+      <span class="week-dates">07.04 → 11.04</span>
+    </div>
+    <div class="task-list">
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">01</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Definição da interface de checkout — venda rápida e redução de fricção</span>
+          <span class="task-tag">pagamento</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">02</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Definição dos campos obrigatórios — foto, data e horário de nascimento e demais informações</span>
+          <span class="task-tag">estrutura</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">03</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Fluxo de pagamento completo</span>
+          <span class="task-tag">pagamento</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">04</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Fluxo do cliente pós-compra e onboarding pós-venda</span>
+          <span class="task-tag">fluxo</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">05</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Fluxo de e-mail transacional</span>
+          <span class="task-tag">fluxo</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">06</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Documentação e especificações para handoff</span>
+          <span class="task-tag">doc</span>
+        </div>
+      </div>
+
+      <div class="task-item" onclick="toggle(this)">
+        <span class="task-num">07</span>
+        <div class="checkbox"><svg class="check-svg" width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="task-body">
+          <span class="task-text">Protótipo navegável do fluxo completo de compra e pós-venda</span>
+          <span class="task-tag">protótipo</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DAILY DETAIL -->
+  <div class="daily-detail">
+    <div class="daily-card">
+      <div class="daily-card-time">10h</div>
+      <div class="daily-card-tz">Brasília · standup manhã</div>
+      <div class="daily-card-items">
+        <div class="daily-card-item">O que foi feito ontem</div>
+        <div class="daily-card-item">O que será feito hoje</div>
+        <div class="daily-card-item">Bloqueios ou dúvidas</div>
+      </div>
+    </div>
+    <div class="daily-card">
+      <div class="daily-card-time">18h</div>
+      <div class="daily-card-tz">New York · sync tarde</div>
+      <div class="daily-card-items">
+        <div class="daily-card-item">Revisão do progresso do dia</div>
+        <div class="daily-card-item">Alinhamento de decisões</div>
+        <div class="daily-card-item">Próximos passos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-left">Cosmic Pet Club</span>
+    <span class="footer-right">V1 · 2025</span>
+  </div>
+
+</div>
+<script>
+  function toggle(el) {
+    el.classList.toggle('done');
+    update();
+  }
+  function update() {
+    const total = document.querySelectorAll('.task-item').length;
+    const done = document.querySelectorAll('.task-item.done').length;
+    const pct = Math.round((done / total) * 100);
+    document.getElementById('progress-label').textContent = done + ' / ' + total + ' tarefas';
+    document.getElementById('progress-bar').style.width = Math.max(pct, 1) + '%';
+  }
+  update();
+</script>
+</body>
+</html>
