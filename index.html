@@ -3,340 +3,656 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diagnóstico UX · Cosmic Pet Club</title>
+<title>THOR — Cosmic Pet Club V1</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F0EEEA;
+  --border:#D8D4CC;
+  --border-strong:#AAA49A;
+  --text-primary:#1A1814;
+  --text-secondary:#3D3A35;
+  --text-tertiary:#888178;
+  --header-h:56px;
+  --nav-h:48px;
+  --pill-bg:#D8D2C6;
+  --pill-active:#FFFFFF;
+}
 
-  :root {
-    --text: #1a1a1a;
-    --muted: #6b6b6b;
-    --faint: #999;
-    --border: #e5e5e5;
-    --bg: #ffffff;
-    --surface: #f7f7f5;
-    --accent: #1a1a1a;
-    --tag-bg: #f0f0ec;
-    --warn: #c0392b;
-    --caution: #b7600a;
-    --ok: #2a6e3f;
-  }
+body{background:var(--bg);color:var(--text-primary);font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-  }
+/* ── HEADER ── */
+.header{
+  position:fixed;top:0;left:0;right:0;height:var(--header-h);
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(20px,4vw,56px);
+  z-index:100;
+  transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.logo{font-family:'DM Serif Display',serif;font-size:21px;color:var(--text-primary);letter-spacing:0.01em;line-height:1}
+.ver-tag{font-size:11px;color:var(--text-tertiary)}
 
-  .wrap { max-width: 740px; margin: 0 auto; padding: 64px 24px 100px; }
+/* ── NAV STRIP ── */
+.nav-strip{
+  position:fixed;top:var(--header-h);left:0;right:0;height:var(--nav-h);
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  z-index:95;
+  transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.header.hidden{transform:translateY(calc(-1 * (var(--header-h) + var(--nav-h))))}
+.nav-strip.hidden{transform:translateY(calc(-1 * (var(--header-h) + var(--nav-h))))}
+.pill-nav{
+  display:flex;align-items:center;
+  background:var(--pill-bg);
+  border-radius:100px;padding:4px;gap:2px;position:relative;
+}
+.pill-slider{
+  position:absolute;top:4px;left:4px;height:calc(100% - 8px);
+  background:var(--bg);border-radius:100px;
+  transition:left 0.28s cubic-bezier(0.4,0,0.2,1),width 0.28s cubic-bezier(0.4,0,0.2,1);
+  z-index:0;pointer-events:none;
+}
+.pill-item{
+  position:relative;z-index:1;
+  padding:6px 18px;border-radius:100px;
+  font-size:12px;font-weight:500;
+  color:rgba(30,26,20,0.45);
+  cursor:pointer;transition:color 0.2s;white-space:nowrap;user-select:none;
+}
+.pill-item:hover{color:rgba(30,26,20,0.8)}
+.pill-item.active{color:var(--text-primary);font-weight:500}
 
-  /* Header */
-  .doc-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 56px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
-  .doc-meta-left { font-size: 13px; color: var(--faint); }
-  .doc-meta-left strong { color: var(--muted); font-weight: 500; }
-  .doc-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); background: var(--tag-bg); padding: 4px 10px; border-radius: 4px; }
+/* ── MAIN ── */
+.main{
+  padding-top:calc(var(--header-h) + var(--nav-h) + 48px);
+  padding-bottom:100px;
+}
+.page-content{
+  max-width:min(960px, 92vw);
+  margin:0 auto;
+  padding:0 clamp(16px,3vw,48px);
+}
+.tab-panel{display:none}.tab-panel.active{display:block}
 
-  h1 { font-size: 32px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 14px; }
-  .lead { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 560px; margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--border); }
+/* ── TYPOGRAPHY ── */
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:12px}
+.sec-title{font-size:clamp(20px,3vw,28px);font-weight:600;letter-spacing:-0.03em;margin-bottom:8px}
+.sec-meta{font-size:13px;color:var(--text-tertiary);margin-bottom:32px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.sec-meta .sep{color:var(--border-strong)}
 
-  /* Seção */
-  .sec { margin-bottom: 56px; }
-  .sec-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); margin-bottom: 20px; }
+/* ── PROGRESS ── */
+.progress-section{margin-bottom:28px}
+.progress-top{display:flex;justify-content:space-between;font-size:11px;color:var(--text-tertiary);margin-bottom:7px}
+.progress-track{height:2px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;width:1%;background:var(--text-primary);border-radius:2px;transition:width 0.4s ease}
 
-  /* Diagnóstico */
-  .diag-list { display: flex; flex-direction: column; gap: 0; }
-  .diag-item { display: grid; grid-template-columns: 28px 1fr; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--border); align-items: start; }
-  .diag-item:first-child { border-top: 1px solid var(--border); }
-  .diag-num { font-size: 12px; color: var(--faint); padding-top: 2px; }
-  .diag-content {}
-  .diag-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-  .diag-title.warn { color: var(--warn); }
-  .diag-title.caution { color: var(--caution); }
-  .diag-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
+/* ── TODAY INLINE ── */
+.today-block{margin-bottom:32px}
+.today-label{font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:8px}
+.today-chips{display:flex;gap:6px;flex-wrap:wrap}
 
-  /* Jornada */
-  .journey { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
-  .j-step { background: var(--bg); padding: 14px 12px; }
-  .j-step.gap { background: #fdf5f5; }
-  .j-num { font-size: 10px; color: var(--faint); margin-bottom: 4px; }
-  .j-title { font-size: 12px; font-weight: 500; margin-bottom: 4px; color: var(--text); }
-  .j-step.gap .j-title { color: var(--warn); }
-  .j-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
-  .journey-legend { display: flex; gap: 20px; font-size: 11px; color: var(--faint); }
-  .journey-legend span { display: flex; align-items: center; gap: 5px; }
-  .dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+/* ── TAGS / CHIPS ── */
+.chip,.task-tag{font-size:10px;font-weight:500;border-radius:5px;padding:3px 8px;border:1px solid transparent;white-space:nowrap}
+.tag-estrutura{background:#E8F0FE;color:#1A56DB;border-color:#93B4FA}
+.tag-design   {background:#FDF2FF;color:#9333EA;border-color:#D8A8F7}
+.tag-conteudo {background:#FFF7E6;color:#B45309;border-color:#F6CA7A}
+.tag-fluxo    {background:#E6FBF4;color:#0D7A55;border-color:#6ED8B0}
+.tag-doc      {background:#EFEFEB;color:#555;   border-color:#C8C4BC}
+.tag-prototipo{background:#FFF0F0;color:#C0392B;border-color:#F5A9A9}
+.tag-pagamento{background:#E8FBE8;color:#1A7A2E;border-color:#7DD87D}
+.task-item.done .task-tag{background:#E8E6E2!important;color:#AAA49A!important;border-color:#C8C4BC!important}
 
-  /* MVP */
-  .mvp-list { display: flex; flex-direction: column; gap: 0; }
-  .mvp-item { display: grid; grid-template-columns: 20px 1fr; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--border); }
-  .mvp-item:first-child { border-top: 1px solid var(--border); }
-  .mvp-check { width: 16px; height: 16px; border: 1.5px solid var(--border); border-radius: 4px; margin-top: 3px; display: flex; align-items: center; justify-content: center; }
-  .mvp-check svg { width: 9px; height: 9px; stroke: var(--ok); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-  .mvp-title { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
-  .mvp-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+/* ── WEEK ── */
+.week-block{margin-bottom:32px}
+.week-head{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:10px;border-bottom:1.5px solid var(--border-strong);margin-bottom:2px;gap:12px;flex-wrap:wrap}
+.week-left{display:flex;align-items:baseline;gap:10px}
+.week-label{font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-tertiary)}
+.week-name{font-size:14px;font-weight:500;color:var(--text-primary)}
+.week-dates{font-size:11px;color:var(--text-tertiary);white-space:nowrap}
 
-  /* Arquitetura */
-  .arch { display: flex; flex-direction: column; gap: 10px; }
-  .arch-row { display: flex; gap: 8px; align-items: center; }
-  .arch-lbl { font-size: 11px; color: var(--faint); min-width: 64px; }
-  .arch-box { font-size: 12px; padding: 8px 14px; border: 1px solid var(--border); border-radius: 5px; color: var(--text); }
-  .arch-box.primary { border-color: var(--text); font-weight: 500; }
-  .arch-box.service { background: var(--surface); color: var(--muted); }
-  .arch-box.support { color: var(--faint); }
+/* ── TASKS ── */
+.task-list{display:flex;flex-direction:column}
+.task-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);user-select:none}
+.task-item:last-child{border-bottom:none}
+.task-item:hover{opacity:0.75}
+.task-num{font-size:11px;color:var(--text-tertiary);min-width:20px;flex-shrink:0;font-variant-numeric:tabular-nums}
 
-  /* Prioridades */
-  .prio-list { display: flex; flex-direction: column; gap: 0; }
-  .prio-item { display: flex; justify-content: space-between; align-items: baseline; padding: 13px 0; border-bottom: 1px solid var(--border); gap: 16px; }
-  .prio-item:first-child { border-top: 1px solid var(--border); }
-  .prio-text { font-size: 13px; color: var(--text); }
-  .badge { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
-  .badge.now { background: #eef6f1; color: var(--ok); }
-  .badge.later { background: #fef4e8; color: var(--caution); }
-  .badge.skip { background: var(--tag-bg); color: var(--faint); }
+/* checkbox — vazado, quando selected fica com ponto interno */
+.checkbox{
+  width:16px;height:16px;
+  border:1.5px solid var(--border-strong);
+  border-radius:4px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.12s;cursor:pointer;
+  background:transparent;
+}
+.task-item.selected .checkbox{border-color:var(--text-primary)}
+.task-item.selected .checkbox::after{content:'';width:7px;height:7px;border-radius:2px;background:var(--text-primary)}
 
-  /* Conclusão */
-  .conclusion { background: var(--surface); border-radius: 8px; padding: 28px 28px; margin-bottom: 56px; }
-  .conclusion p { font-size: 14px; color: var(--muted); line-height: 1.8; }
-  .conclusion p + p { margin-top: 12px; }
+.task-body{flex:1;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.task-text{font-size:13.5px;color:var(--text-primary);line-height:1.5;flex:1}
+.task-item.done .task-text{color:var(--text-tertiary);text-decoration:line-through;text-decoration-color:var(--border-strong)}
 
-  /* Footer */
-  .doc-footer { padding-top: 32px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--faint); flex-wrap: wrap; gap: 8px; }
+/* done icon — circle outline, fills green when done */
+.done-icon{
+  width:24px;height:24px;border-radius:50%;
+  border:1.5px solid var(--border-strong);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;transition:all 0.15s;
+  background:transparent;
+}
+.done-icon:hover{border-color:var(--text-primary)}
+.done-icon svg{display:none}
+.task-item.done .done-icon{background:#22C55E;border-color:#22C55E}
+.task-item.done .done-icon svg{display:block}
 
-  @media (max-width: 600px) {
-    h1 { font-size: 24px; }
-    .journey { grid-template-columns: repeat(2, 1fr); }
-    .doc-meta { flex-direction: column; align-items: flex-start; gap: 10px; }
-    .prio-item { flex-direction: column; gap: 4px; }
-  }
+/* ── DAILY CARDS ── */
+.daily-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:36px;padding-top:24px;border-top:1px solid var(--border)}
+@media(max-width:520px){.daily-grid{grid-template-columns:1fr}}
+.daily-card{background:transparent;border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.daily-card-time{font-size:18px;font-weight:600;letter-spacing:-0.03em;line-height:1;margin-bottom:3px;color:var(--text-primary)}
+.daily-card-tz{font-size:11px;color:var(--text-tertiary);margin-bottom:14px}
+.daily-card-items{display:flex;flex-direction:column;gap:6px}
+.daily-card-item{display:flex;gap:8px;font-size:12.5px;color:var(--text-secondary);line-height:1.4}
+.daily-card-item::before{content:'—';color:var(--text-tertiary);flex-shrink:0;font-size:11px;margin-top:1px}
+
+/* ── PAGE FOOTER ── */
+.page-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:11px;color:var(--text-tertiary)}
+.page-footer-brand{font-weight:600;letter-spacing:0.08em;text-transform:uppercase}
+
+/* ── TAREFAS REALIZADAS ── */
+.realized-empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:64px 32px;text-align:center}
+.realized-empty-icon{font-size:32px}
+.realized-empty-text{font-size:13px;color:var(--text-tertiary);line-height:1.6}
+.day-card{border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:12px}
+.day-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.day-card-date{font-size:13px;font-weight:600;color:var(--text-primary)}
+.day-card-tasks{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.reaction-row{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.reaction-btn{width:32px;height:32px;border-radius:8px;background:transparent;border:1px solid var(--border);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all 0.12s}
+.reaction-btn:hover{transform:scale(1.1);border-color:var(--border-strong)}
+.reaction-btn.selected{border-color:var(--text-primary);background:var(--text-primary)}
+.done-task-text{font-size:12px;color:var(--text-secondary);margin-bottom:6px;line-height:1.5}
+
+/* ── ANÁLISE ── */
+.analysis-hero{margin-bottom:36px}
+.analysis-tag{display:inline-block;background:var(--border);color:var(--text-secondary);font-size:10px;font-weight:500;padding:3px 10px;border-radius:20px;margin-bottom:12px}
+.analysis-hero h1{font-family:'DM Serif Display',serif;font-size:clamp(24px,4vw,36px);line-height:1.15;color:var(--text-primary);margin-bottom:10px}
+.analysis-hero p{font-size:14px;color:var(--text-secondary);line-height:1.7;max-width:560px}
+.a-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:32px}
+.a-card{border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.a-card-label{font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:8px}
+.a-card-title{font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:5px}
+.a-card-text{font-size:12.5px;color:var(--text-secondary);line-height:1.6}
+.a-divider{height:1px;background:var(--border);margin:28px 0}
+.a-section-title{font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:14px}
+.issue-list{display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
+.issue-item{border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;gap:12px}
+.issue-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.issue-dot.critical{background:#E24B4A}
+.issue-dot.important{background:#BA7517}
+.issue-dot.enhancement{background:#1D9E75}
+.issue-title{font-size:13.5px;font-weight:500;color:var(--text-primary);margin-bottom:4px}
+.issue-body{font-size:12.5px;color:var(--text-secondary);line-height:1.6}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:28px}
+.stat-card{border:1px solid var(--border);border-radius:10px;padding:16px}
+.stat-val{font-size:22px;font-weight:600;color:var(--text-primary);letter-spacing:-0.02em;line-height:1;margin-bottom:6px}
+.stat-label{font-size:11px;color:var(--text-tertiary);line-height:1.4}
+.tl-list{display:flex;flex-direction:column}
+.tl-item{display:flex;gap:16px;padding-bottom:22px;position:relative}
+.tl-item:last-child{padding-bottom:0}
+.tl-item:not(:last-child)::before{content:'';position:absolute;left:7px;top:18px;bottom:0;width:1px;background:var(--border)}
+.tl-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);background:var(--bg);flex-shrink:0;margin-top:2px;z-index:1}
+.tl-dot.done{background:var(--text-primary);border-color:var(--text-primary)}
+.tl-dot.now{background:#22C55E;border-color:#22C55E}
+.tl-tag{font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:3px}
+.tl-title{font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:3px}
+.tl-text{font-size:12.5px;color:var(--text-secondary);line-height:1.6}
+
+/* ── FLUXOS EMPTY ── */
+.flow-empty{display:flex;flex-direction:column;align-items:center;gap:12px;padding:80px 32px;text-align:center}
+.flow-empty-icon{font-size:36px}
+.flow-empty-title{font-size:15px;font-weight:500;color:var(--text-primary)}
+.flow-empty-sub{font-size:13px;color:var(--text-tertiary);line-height:1.6;max-width:280px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .pill-item{padding:6px 12px;font-size:11px}
+  .task-text{font-size:13px}
+  .sec-title{font-size:20px}
+}
+@media(max-width:480px){
+  .pill-item{padding:5px 9px;font-size:10px}
+  .week-head{flex-direction:column;gap:4px}
+  .task-body{flex-wrap:wrap}
+  .task-tag{align-self:flex-start}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div class="doc-meta">
-    <div class="doc-meta-left"><strong>Cosmic Pet Club</strong> · Diagnóstico UX</div>
-    <div class="doc-tag">V1 MVP</div>
-  </div>
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">THOR</div>
+  <span class="ver-tag">V1 · 2025</span>
+</header>
 
-  <h1>Diagnóstico UX e<br>recomendação de escopo</h1>
-  <p class="lead">A marca tem posicionamento, narrativa e proposta de valor. O que falta para lançar bem não é mais branding — é estrutura de decisão. A V1 precisa trocar amplitude por foco.</p>
-
-  <!-- 1. Diagnóstico -->
-  <div class="sec">
-    <div class="sec-label">Diagnóstico · 7 problemas identificados</div>
-    <div class="diag-list">
-      <div class="diag-item">
-        <div class="diag-num">01</div>
-        <div class="diag-content">
-          <div class="diag-title warn">Posicionamento existe, mas a conversão ainda não</div>
-          <div class="diag-body">A home comunica conceito e propósito, mas ainda não responde rápido: o que é, para quem é, quanto custa e qual é o próximo passo.</div>
-        </div>
-      </div>
-      <div class="diag-item">
-        <div class="diag-num">02</div>
-        <div class="diag-content">
-          <div class="diag-title warn">Excesso de ofertas para o estágio atual</div>
-          <div class="diag-body">Energy Healing, Astro Pet Reading, Synastry, eventos, oracle deck e coleção física — 6 frentes dispersam atenção e aumentam esforço cognitivo no momento de decisão.</div>
-        </div>
-      </div>
-      <div class="diag-item">
-        <div class="diag-num">03</div>
-        <div class="diag-content">
-          <div class="diag-title caution">A presença humana da Bruna ainda não está ativada</div>
-          <div class="diag-body">O serviço depende de confiança e credibilidade humana. A fundadora precisa de mais presença visual e narrativa — sem isso, a oferta parece abstrata demais.</div>
-        </div>
-      </div>
-      <div class="diag-item">
-        <div class="diag-num">04</div>
-        <div class="diag-content">
-          <div class="diag-title warn">Falta reduzir ansiedade de compra</div>
-          <div class="diag-body">Ausência de: prazo de entrega, formato do retorno, o que acontece após o pagamento, o que a cliente precisa enviar, confirmação por e-mail.</div>
-        </div>
-      </div>
-      <div class="diag-item">
-        <div class="diag-num">05</div>
-        <div class="diag-content">
-          <div class="diag-title caution">Arquitetura institucional, não orientada à ação</div>
-          <div class="diag-body">Home, About, Offerings, FAQ, Contact e Shop. Para lançamento, ainda está amplo. O usuário é exposto a várias possibilidades antes de entender o produto principal.</div>
-        </div>
-      </div>
-      <div class="diag-item">
-        <div class="diag-num">06</div>
-        <div class="diag-content">
-          <div class="diag-title caution">Credibilidade existe, mas a prova social é fraca</div>
-          <div class="diag-body">Para serviços de alta subjetividade, texto estático não sustenta. Vídeos curtos da Bruna e depoimentos em vídeo têm peso muito superior.</div>
-        </div>
-      </div>
-      <div class="diag-item">
-        <div class="diag-num">07</div>
-        <div class="diag-content">
-          <div class="diag-title caution">CTAs sem hierarquia e ritmo</div>
-          <div class="diag-body">Calls-to-action existem, mas sem protagonismo. Falta repetição estratégica em momentos-chave da jornada.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. Jornada -->
-  <div class="sec">
-    <div class="sec-label">Jornada de compra · onde estão os gaps</div>
-    <div class="journey">
-      <div class="j-step">
-        <div class="j-num">01</div>
-        <div class="j-title">Descoberta</div>
-        <div class="j-desc">Identidade e universo simbólico fortes</div>
-      </div>
-      <div class="j-step">
-        <div class="j-num">02</div>
-        <div class="j-title">Entendimento</div>
-        <div class="j-desc">Manifesto presente, mas espalhado</div>
-      </div>
-      <div class="j-step gap">
-        <div class="j-num">03</div>
-        <div class="j-title">Comparação</div>
-        <div class="j-desc">Muitas ofertas sem hierarquia</div>
-      </div>
-      <div class="j-step gap">
-        <div class="j-num">04</div>
-        <div class="j-title">Confiança</div>
-        <div class="j-desc">Prova social insuficiente</div>
-      </div>
-      <div class="j-step gap">
-        <div class="j-num">05</div>
-        <div class="j-title">Decisão</div>
-        <div class="j-desc">CTA fraco, sem fluxo transacional</div>
-      </div>
-      <div class="j-step gap">
-        <div class="j-num">06</div>
-        <div class="j-title">Pós-compra</div>
-        <div class="j-desc">Sem confirmação nem instrução</div>
-      </div>
-    </div>
-    <div class="journey-legend">
-      <span><span class="dot" style="background:#e5e5e5;"></span>Funcionando</span>
-      <span><span class="dot" style="background:#f7cac9;"></span>Gap crítico</span>
-    </div>
-  </div>
-
-  <!-- 3. MVP -->
-  <div class="sec">
-    <div class="sec-label">V1 MVP · 8 entregáveis essenciais</div>
-    <div class="mvp-list">
-      <div class="mvp-item">
-        <div class="mvp-check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></div>
-        <div>
-          <div class="mvp-title">Foco em dois serviços</div>
-          <div class="mvp-desc">Astro Pet Reading e Energy Healing. Synastry entra como upsell ou bônus na V2.</div>
-        </div>
-      </div>
-      <div class="mvp-item">
-        <div class="mvp-check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></div>
-        <div>
-          <div class="mvp-title">Home como landing page de conversão</div>
-          <div class="mvp-desc">Proposta de valor → Bruna → Serviços → Como funciona → Preços → Prova social → FAQ → CTA final.</div>
-        </div>
-      </div>
-      <div class="mvp-item">
-        <div class="mvp-check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></div>
-        <div>
-          <div class="mvp-title">CTAs distribuídos estrategicamente</div>
-          <div class="mvp-desc">Hero → após bloco de serviço → após prova social → após FAQ → CTA final. Repetição intencional.</div>
-        </div>
-      </div>
-      <div class="mvp-item">
-        <div class="mvp-check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></div>
-        <div>
-          <div class="mvp-title">Fluxo mínimo de checkout</div>
-          <div class="mvp-desc">Detalhe do serviço → compra → checkout → confirmação de pagamento → e-mail → instrução do que enviar → página de obrigado.</div>
-        </div>
-      </div>
-      <div class="mvp-item">
-        <div class="mvp-check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></div>
-        <div>
-          <div class="mvp-title">Bloco operacional por serviço</div>
-          <div class="mvp-desc">Para quem é · o que inclui · o que enviar · prazo de entrega · formato do retorno · investimento.</div>
-        </div>
-      </div>
-      <div class="mvp-item">
-        <div class="mvp-check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></div>
-        <div>
-          <div class="mvp-title">Presença forte da Bruna</div>
-          <div class="mvp-desc">Foto ou vídeo principal + mini bio com experiência + fala pessoal + credenciais e técnicas.</div>
-        </div>
-      </div>
-      <div class="mvp-item">
-        <div class="mvp-check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></div>
-        <div>
-          <div class="mvp-title">FAQ orientado à objeção real</div>
-          <div class="mvp-desc">Como recebo a leitura? Em quanto tempo? Como funciona o healing à distância? O que acontece depois da compra?</div>
-        </div>
-      </div>
-      <div class="mvp-item">
-        <div class="mvp-check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></div>
-        <div>
-          <div class="mvp-title">Captura de lead com isca digital</div>
-          <div class="mvp-desc">Guia gratuito sobre energia dos pets, mini ritual para pets ansiosos ou checklist de sinais energéticos.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. Arquitetura -->
-  <div class="sec">
-    <div class="sec-label">Arquitetura recomendada · V1</div>
-    <div class="arch">
-      <div class="arch-row">
-        <div class="arch-lbl">Principal</div>
-        <div class="arch-box primary">Home · landing page de conversão</div>
-      </div>
-      <div class="arch-row">
-        <div class="arch-lbl">Serviços</div>
-        <div class="arch-box service">Astro Pet Reading</div>
-        <div class="arch-box service">Energy Healing for Pets</div>
-      </div>
-      <div class="arch-row">
-        <div class="arch-lbl">Apoio</div>
-        <div class="arch-box support">About Bruna</div>
-        <div class="arch-box support">FAQ integrado na home</div>
-        <div class="arch-box support">Contato integrado na home</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5. Priorização -->
-  <div class="sec">
-    <div class="sec-label">Priorização prática</div>
-    <div class="prio-list">
-      <div class="prio-item"><span class="prio-text">Reduzir para dois serviços e reorganizar a home</span><span class="badge now">Agora</span></div>
-      <div class="prio-item"><span class="prio-text">Definir CTAs e fluxo completo de compra</span><span class="badge now">Agora</span></div>
-      <div class="prio-item"><span class="prio-text">Criar páginas de detalhe dos dois serviços</span><span class="badge now">Agora</span></div>
-      <div class="prio-item"><span class="prio-text">Escrever bloco operacional de cada serviço</span><span class="badge now">Agora</span></div>
-      <div class="prio-item"><span class="prio-text">Reforçar presença humana da Bruna</span><span class="badge now">Agora</span></div>
-      <div class="prio-item"><span class="prio-text">Estruturar FAQ orientado à objeção</span><span class="badge now">Agora</span></div>
-      <div class="prio-item"><span class="prio-text">Criar captura de lead com isca digital</span><span class="badge now">Agora</span></div>
-      <div class="prio-item"><span class="prio-text">Vídeo curto da Bruna no hero ou abaixo da dobra</span><span class="badge now">Agora</span></div>
-      <div class="prio-item"><span class="prio-text">Microinterações e scroll reveal</span><span class="badge now">Agora</span></div>
-      <div class="prio-item"><span class="prio-text">Synastry como produto independente</span><span class="badge later">Depois</span></div>
-      <div class="prio-item"><span class="prio-text">Shop completo com produtos físicos</span><span class="badge later">Depois</span></div>
-      <div class="prio-item"><span class="prio-text">Eventos como vertical dedicada</span><span class="badge later">Depois</span></div>
-      <div class="prio-item"><span class="prio-text">Animações complexas e efeitos visuais elaborados</span><span class="badge skip">Não agora</span></div>
-    </div>
-  </div>
-
-  <!-- Conclusão -->
-  <div class="conclusion">
-    <p>O projeto tem marca, narrativa e proposta de valor. O que falta para lançar bem não é mais branding. É estrutura de decisão.</p>
-    <p>A V1 precisa trocar amplitude por foco. Em vez de apresentar todo o universo da marca de uma vez, o ideal é conduzir o usuário para dois serviços centrais — com clareza operacional, prova humana forte e um caminho de compra sem ruído.</p>
-    <p>Se a base funcional estiver correta, a camada de interatividade pode entrar depois como aceleração de desejo e percepção de valor.</p>
-  </div>
-
-  <div class="doc-footer">
-    <span>Diagnóstico UX · Cosmic Pet Club · 2025</span>
-    <span>Getulio · UX Design Consultant</span>
-  </div>
-
+<!-- NAV STRIP -->
+<div class="nav-strip">
+  <nav class="pill-nav" id="pillNav">
+    <div class="pill-slider" id="pillSlider"></div>
+    <div class="pill-item active" data-tab="cronograma" onclick="switchTab(this)">Cronograma</div>
+    <div class="pill-item" data-tab="realizadas" onclick="switchTab(this)">Tarefas Realizadas</div>
+    <div class="pill-item" data-tab="analise" onclick="switchTab(this)">Estudos</div>
+    <div class="pill-item" data-tab="fluxos" onclick="switchTab(this)">Fluxos</div>
+  </nav>
 </div>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="page-content">
+
+    <!-- CRONOGRAMA -->
+    <div class="tab-panel active" id="tab-cronograma">
+      <div class="eyebrow">Projeto V1 · Kickoff 26.03.2025</div>
+      <h1 class="sec-title">Cosmic Pet Club</h1>
+      <div class="sec-meta">
+        <span>2 semanas</span><span class="sep">·</span>
+        <span>17 tarefas</span><span class="sep">·</span>
+        <span>2 dailies por dia</span>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-top"><span>progresso geral</span><span id="progress-label">0 / 17 tarefas</span></div>
+        <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
+      </div>
+
+      <!-- HOJE -->
+      <div class="today-block">
+        <div class="today-label">Hoje — Sex 28.03</div>
+        <div class="today-chips">
+          <span class="chip tag-estrutura">01 · estrutura</span>
+          <span class="chip tag-design">02 · design</span>
+        </div>
+      </div>
+
+      <!-- SEMANA 1 -->
+      <div class="week-block">
+        <div class="week-head">
+          <div class="week-left"><span class="week-label">Semana 1</span><span class="week-name">Estratégia, estrutura e interface</span></div>
+          <span class="week-dates">26.03 → 03.04</span>
+        </div>
+        <div class="task-list">
+
+          <div class="task-item" data-num="01" data-text="Definição da tecnologia e estrutura do site com foco em escalabilidade" data-tag="estrutura">
+            <span class="task-num">01</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Definição da tecnologia e estrutura do site com foco em escalabilidade</span><span class="task-tag tag-estrutura">estrutura</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="02" data-text="Desenho do layout com estrutura de slots" data-tag="design">
+            <span class="task-num">02</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Desenho do layout com estrutura de slots</span><span class="task-tag tag-design">design</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="03" data-text="Criação de componentes reutilizáveis — imagem, vídeo e texto" data-tag="design">
+            <span class="task-num">03</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Criação de componentes reutilizáveis — imagem, vídeo e texto</span><span class="task-tag tag-design">design</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="04" data-text="Variações de estado de interface: ativo, desabilitado, alerta e erro" data-tag="design">
+            <span class="task-num">04</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Variações de estado de interface: ativo, desabilitado, alerta e erro</span><span class="task-tag tag-design">design</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="05" data-text="Dinâmica / Canvas de tom verbal e estrutura narrativa" data-tag="conteudo">
+            <span class="task-num">05</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Dinâmica / Canvas de tom verbal e estrutura narrativa</span><span class="task-tag tag-conteudo">conteúdo</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="06" data-text="Fluxo de detalhes dos produtos" data-tag="fluxo">
+            <span class="task-num">06</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Fluxo de detalhes dos produtos</span><span class="task-tag tag-fluxo">fluxo</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="07" data-text="Fluxo de contato" data-tag="fluxo">
+            <span class="task-num">07</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Fluxo de contato</span><span class="task-tag tag-fluxo">fluxo</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="08" data-text="Fluxo de FAQ" data-tag="fluxo">
+            <span class="task-num">08</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Fluxo de FAQ</span><span class="task-tag tag-fluxo">fluxo</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="09" data-text="Documentação para handoff e especificações técnicas" data-tag="doc">
+            <span class="task-num">09</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Documentação para handoff e especificações técnicas</span><span class="task-tag tag-doc">doc</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="10" data-text="Protótipo navegável — experiência, confiabilidade, emoção e clareza" data-tag="prototipo">
+            <span class="task-num">10</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Protótipo navegável — experiência, confiabilidade, emoção e clareza nos produtos</span><span class="task-tag tag-prototipo">protótipo</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SEMANA 2 -->
+      <div class="week-block">
+        <div class="week-head">
+          <div class="week-left"><span class="week-label">Semana 2</span><span class="week-name">Jornada de pagamento e pós-venda</span></div>
+          <span class="week-dates">07.04 → 11.04</span>
+        </div>
+        <div class="task-list">
+
+          <div class="task-item" data-num="01" data-text="Definição da interface de checkout — venda rápida e redução de fricção" data-tag="pagamento">
+            <span class="task-num">01</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Definição da interface de checkout — venda rápida e redução de fricção</span><span class="task-tag tag-pagamento">pagamento</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="02" data-text="Definição dos campos obrigatórios — foto, data e horário de nascimento" data-tag="estrutura">
+            <span class="task-num">02</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Definição dos campos obrigatórios — foto, data e horário de nascimento</span><span class="task-tag tag-estrutura">estrutura</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="03" data-text="Fluxo de pagamento completo" data-tag="pagamento">
+            <span class="task-num">03</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Fluxo de pagamento completo</span><span class="task-tag tag-pagamento">pagamento</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="04" data-text="Fluxo do cliente pós-compra e onboarding pós-venda" data-tag="fluxo">
+            <span class="task-num">04</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Fluxo do cliente pós-compra e onboarding pós-venda</span><span class="task-tag tag-fluxo">fluxo</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="05" data-text="Fluxo de e-mail transacional" data-tag="fluxo">
+            <span class="task-num">05</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Fluxo de e-mail transacional</span><span class="task-tag tag-fluxo">fluxo</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="06" data-text="Documentação e especificações para handoff" data-tag="doc">
+            <span class="task-num">06</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Documentação e especificações para handoff</span><span class="task-tag tag-doc">doc</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+          <div class="task-item" data-num="07" data-text="Protótipo navegável do fluxo completo de compra e pós-venda" data-tag="prototipo">
+            <span class="task-num">07</span>
+            <div class="checkbox" onclick="selectTask(this.closest('.task-item'))"></div>
+            <div class="task-body"><span class="task-text">Protótipo navegável do fluxo completo de compra e pós-venda</span><span class="task-tag tag-prototipo">protótipo</span></div>
+            <div class="done-icon" onclick="doneTask(this.closest('.task-item'))"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="daily-grid">
+        <div class="daily-card">
+          <div class="daily-card-time">10:00 a.m.</div>
+          <div class="daily-card-tz">New York · manhã</div>
+          <div class="daily-card-items">
+            <div class="daily-card-item">O que foi feito ontem</div>
+            <div class="daily-card-item">O que será feito hoje</div>
+            <div class="daily-card-item">Bloqueios ou dúvidas</div>
+          </div>
+        </div>
+        <div class="daily-card">
+          <div class="daily-card-time">6:00 p.m.</div>
+          <div class="daily-card-tz">New York · tarde</div>
+          <div class="daily-card-items">
+            <div class="daily-card-item">Revisão do progresso</div>
+            <div class="daily-card-item">Alinhamento de decisões</div>
+            <div class="daily-card-item">Próximos passos</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-footer">
+        <span class="page-footer-brand">Cosmic Pet Club</span>
+        <span>V1 · 2025</span>
+      </div>
+    </div>
+
+    <!-- TAREFAS REALIZADAS -->
+    <div class="tab-panel" id="tab-realizadas">
+      <div class="eyebrow">Histórico</div>
+      <h1 class="sec-title">Tarefas Realizadas</h1>
+      <div id="realizedList">
+        <div class="realized-empty" id="realizedEmpty">
+          <div class="realized-empty-icon">✓</div>
+          <div class="realized-empty-text">As tarefas concluídas aparecerão aqui,<br>agrupadas por dia.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESTUDOS -->
+    <div class="tab-panel" id="tab-analise">
+      <!-- GRID VIEW -->
+      <div id="estudos-grid">
+        <div class="eyebrow">Estudos</div>
+        <h1 class="sec-title">Análises & decisões</h1>
+        <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:32px">Documentos de pesquisa e estratégia para orientar cada decisão do projeto.</p>
+        <div class="estudos-cards">
+          <div class="estudo-card" onclick="openEstudo('ux-strategy')">
+            <div class="estudo-emoji">🌌</div>
+            <div class="estudo-body">
+              <div class="estudo-title">Estratégia & Diagnóstico UX</div>
+              <div class="estudo-meta">24 mar. 2026 · 4 fontes</div>
+              <div class="estudo-desc">O que existe, o que falta e o que construir primeiro para o Cosmic Pet Club converter visitantes em clientes.</div>
+            </div>
+          </div>
+          <div class="estudo-card estudo-new" onclick="">
+            <div class="estudo-emoji">＋</div>
+            <div class="estudo-body">
+              <div class="estudo-title" style="color:var(--text-tertiary)">Novo estudo</div>
+              <div class="estudo-meta">Em breve</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DETAIL VIEW -->
+      <div id="estudos-detail" style="display:none">
+        <div style="margin-bottom:24px">
+          <button class="back-btn" onclick="closeEstudo()">← Estudos</button>
+        </div>
+        <div id="estudos-detail-content"></div>
+      </div>
+    </div>
+
+    <!-- FLUXOS -->
+    <div class="tab-panel" id="tab-fluxos">
+      <div class="flow-empty">
+        <div class="flow-empty-icon">🔀</div>
+        <div class="flow-empty-title">Fluxos</div>
+        <div class="flow-empty-sub">Ainda não chegamos aqui.<br>Os fluxos serão documentados durante a semana 1.</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// NAV
+function switchTab(el){
+  document.querySelectorAll('.pill-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+el.dataset.tab).classList.add('active');
+  updateSlider();
+}
+function updateSlider(){
+  const nav=document.getElementById('pillNav');
+  const active=nav.querySelector('.pill-item.active');
+  const slider=document.getElementById('pillSlider');
+  const nr=nav.getBoundingClientRect();
+  const ar=active.getBoundingClientRect();
+  slider.style.left=(ar.left-nr.left)+'px';
+  slider.style.width=ar.width+'px';
+}
+window.addEventListener('load',()=>setTimeout(updateSlider,50));
+window.addEventListener('resize',updateSlider);
+
+// TASKS
+const doneByDay={};
+function selectTask(item){item.classList.toggle('selected')}
+function doneTask(item){
+  if(item.classList.contains('done'))return;
+  item.classList.add('done');item.classList.remove('selected');
+  const today=getTodayLabel();
+  if(!doneByDay[today])doneByDay[today]=[];
+  doneByDay[today].push({num:item.dataset.num,text:item.dataset.text,tag:item.dataset.tag,reaction:''});
+  updateProgress();renderRealized();
+}
+function getTodayLabel(){
+  const d=new Date();
+  const days=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  return days[d.getDay()]+' '+String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');
+}
+function updateProgress(){
+  const total=document.querySelectorAll('.task-item').length;
+  const done=document.querySelectorAll('.task-item.done').length;
+  const pct=Math.round((done/total)*100);
+  document.getElementById('progress-label').textContent=done+' / '+total+' tarefas';
+  document.getElementById('progress-bar').style.width=Math.max(pct,1)+'%';
+}
+const tagColors={
+  estrutura:'background:#E8F0FE;color:#1A56DB;border-color:#93B4FA',
+  design:'background:#FDF2FF;color:#9333EA;border-color:#D8A8F7',
+  conteudo:'background:#FFF7E6;color:#B45309;border-color:#F6CA7A',
+  fluxo:'background:#E6FBF4;color:#0D7A55;border-color:#6ED8B0',
+  doc:'background:#EFEFEB;color:#555;border-color:#C8C4BC',
+  prototipo:'background:#FFF0F0;color:#C0392B;border-color:#F5A9A9',
+  pagamento:'background:#E8FBE8;color:#1A7A2E;border-color:#7DD87D'
+};
+function renderRealized(){
+  const container=document.getElementById('realizedList');
+  const days=Object.keys(doneByDay);
+  if(days.length===0){container.innerHTML='<div class="realized-empty" id="realizedEmpty"><div class="realized-empty-icon">✓</div><div class="realized-empty-text">As tarefas concluídas aparecerão aqui,<br>agrupadas por dia.</div></div>';return;}
+  let html='';
+  days.forEach(day=>{
+    const tasks=doneByDay[day];
+    const chips=tasks.map(t=>`<span class="chip" style="${tagColors[t.tag]||''}">${t.num} · ${t.tag}</span>`).join('');
+    const items=tasks.map((t,i)=>{
+      const btns=['👍','🔄','❌'].map(e=>`<button class="reaction-btn${t.reaction===e?' selected':''}" onclick="setReaction('${day}',${i},'${e}',this)">${e}</button>`).join('');
+      return`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div class="done-task-text">${t.text}</div><div class="reaction-row">${btns}</div></div>`;
+    }).join('');
+    html+=`<div class="day-card"><div class="day-card-header"><span class="day-card-date">${day}</span></div><div class="day-card-tasks">${chips}</div>${items}</div>`;
+  });
+  container.innerHTML=html;
+}
+function setReaction(day,idx,emoji,btn){
+  doneByDay[day][idx].reaction=emoji;
+  btn.closest('.reaction-row').querySelectorAll('.reaction-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+updateProgress();
+
+const estudoData = {
+  'ux-strategy': `
+    <div class="analysis-hero">
+      <div class="analysis-tag">Diagnóstico UX · Março 2026</div>
+      <h1 style="font-family:'DM Serif Display',serif;font-size:clamp(22px,3.5vw,32px);line-height:1.15;margin-bottom:10px">Diagnóstico, estratégia<br>e o que <em>construir a seguir.</em></h1>
+      <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;max-width:560px;margin-bottom:0">Uma análise do que já existe no Figma, o que está faltando para o site converter, e o fluxo de compra que precisa ser construído — para Bruna Fabregat.</p>
+    </div>
+    <div class="a-grid">
+      <div class="a-card"><div class="a-card-label">Situação atual</div><div class="a-card-title">Site ainda não está no ar</div><div class="a-card-text">As telas estão no Figma. Marca e conteúdo sólidos. Falta a infraestrutura de venda.</div></div>
+      <div class="a-card"><div class="a-card-label">Oportunidade</div><div class="a-card-title">0% de conversão online hoje</div><div class="a-card-text">Nenhum visitante consegue comprar online agora. Um fluxo de checkout muda isso.</div></div>
+      <div class="a-card"><div class="a-card-label">Ticket mínimo</div><div class="a-card-title">$111 por transação</div><div class="a-card-text">Astro Pet Reading é o produto de entrada ideal — preço acessível, fluxo simples.</div></div>
+      <div class="a-card"><div class="a-card-label">Benchmark</div><div class="a-card-title">3x mais conversão</div><div class="a-card-text">Checkout integrado converte 3x mais do que redirecionar para contato externo.</div></div>
+    </div>
+    <div class="a-divider"></div>
+    <div class="a-section-title">Problemas identificados</div>
+    <div class="issue-list">
+      <div class="issue-item"><div class="issue-dot critical"></div><div><div class="issue-title">Nenhum caminho de compra online</div><div class="issue-body">O fluxo de conversão não existe ainda. O visitante não consegue comprar.</div></div></div>
+      <div class="issue-item"><div class="issue-dot important"></div><div><div class="issue-title">Páginas de serviço não fecham a venda</div><div class="issue-body">Boas descrições, mas faltam escassez, prova social e resumo de valor antes do CTA.</div></div></div>
+      <div class="issue-item"><div class="issue-dot enhancement"></div><div><div class="issue-title">Ausência de micro-interações</div><div class="issue-body">O site parece um brochure. Hover states e transições aumentam muito a percepção de qualidade.</div></div></div>
+    </div>
+    <div class="a-divider"></div>
+    <div class="a-section-title">O que construir — na ordem certa</div>
+    <div class="tl-list">
+      <div class="tl-item"><div class="tl-dot done"></div><div><div class="tl-tag">Concluído</div><div class="tl-title">Marca e conteúdo — feitos e sólidos</div><div class="tl-text">Identidade visual, manifesto, descrições de serviço, história da Bruna. Base sólida.</div></div></div>
+      <div class="tl-item"><div class="tl-dot now"></div><div><div class="tl-tag">Agora — Prioridade 1</div><div class="tl-title">Fluxo de checkout — a peça que falta</div><div class="tl-text">3 telas: dados do pet → pagamento → confirmação. Sem login. Stripe ou PayPal.</div></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-tag">A seguir — Prioridade 2</div><div class="tl-title">Confiança e prova social</div><div class="tl-text">Depoimentos reais com foto e nome do pet, FAQ inline nas páginas de serviço.</div></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-tag">Depois — Prioridade 3</div><div class="tl-title">Experiência e micro-interações</div><div class="tl-text">Animações de scroll, hover states, transições. Eleva a percepção sem mudar estrutura.</div></div></div>
+    </div>
+  `
+};
+
+function openEstudo(id){
+  document.getElementById('estudos-grid').style.display='none';
+  const detail = document.getElementById('estudos-detail');
+  document.getElementById('estudos-detail-content').innerHTML = estudoData[id] || '';
+  detail.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function closeEstudo(){
+  document.getElementById('estudos-detail').style.display='none';
+  document.getElementById('estudos-grid').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+
+// HIDE ON SCROLL DOWN, SHOW ON SCROLL UP
+let lastY = 0;
+let ticking = false;
+const headerEl = document.querySelector('.header');
+const navEl = document.querySelector('.nav-strip');
+
+window.addEventListener('scroll', () => {
+  if(!ticking){
+    window.requestAnimationFrame(() => {
+      const currentY = window.scrollY;
+      const totalH = headerEl.offsetHeight + navEl.offsetHeight;
+      if(currentY > lastY && currentY > totalH){
+        headerEl.classList.add('hidden');
+        navEl.classList.add('hidden');
+      } else {
+        headerEl.classList.remove('hidden');
+        navEl.classList.remove('hidden');
+      }
+      lastY = currentY;
+      ticking = false;
+    });
+    ticking = true;
+  }
+});
+
+</script>
 </body>
 </html>
