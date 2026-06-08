@@ -1,0 +1,34 @@
+---
+description: After authorized changes, commit and push to GitHub for COSMIC backup
+alwaysApply: true
+---
+
+# Git publish workflow — COSMIC
+
+Configure o remote quando o repositório estiver inicializado (`git remote add origin <url>`).
+
+## When the user authorizes
+
+After the user explicitly approves publishing (e.g. "publica", "commita", "pode subir", "foi"), do this in the same turn:
+
+1. Run `git status`, `git diff`, and `git log -3 --oneline` to understand changes.
+2. Stage only relevant project files (never secrets like `.env`).
+3. Create a concise commit message focused on **why**.
+4. Commit.
+5. Push to `origin main` with `git push origin main`.
+
+Do not stop after commit — push is part of the authorized publish step.
+
+## When NOT to commit or push
+
+- Never commit or push without explicit user authorization in that conversation.
+- Never force-push to `main`.
+- Never amend unless the user rules for amend apply.
+
+## Project layout
+
+- Site estático na **raiz do repo** (`index.html`, `css/`, `js/`, `img/`, etc.).
+- Brand assets em `Assets/`.
+- Build opcional via Gulp (`gulp/`).
+
+Ao editar o site, atualize os arquivos na raiz.

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Curva de animação Bouncing/Premium */
+        .ease-bounce { transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .ease-premium { transition-timing-function: cubic-bezier(.22, .68, 0, 1); }
+        
+        /* Animação de entrada dos itens */
+        .menu-item-enter {
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.4s ease-out;
+        }
+        .menu-open .menu-item-enter {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Configuração dos Pontos do Menu (Dots) */
+        .menu-trigger {
+            --dot-offset-y: 5px;
+            --dot-rotation: 0deg;
+        }
+        .menu-trigger.is-open {
+            --dot-offset-y: 0px;
+            --dot-rotation: 180deg;
+        }
+        .menu-trigger__dots {
+            transform: rotate(var(--dot-rotation));
+            transition: transform 0.6s cubic-bezier(.22, .68, 0, 1.15);
+        }
+        .menu-trigger__dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+            transition: transform 0.5s cubic-bezier(.22, .68, 0, 1.15);
+        }
+        .menu-trigger__dot--top { transform: translate(-50%, calc(-50% - var(--dot-offset-y))); }
+        .menu-trigger__dot--bottom { transform: translate(-50%, calc(-50% + var(--dot-offset-y))); }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+        }
+    </style>
+</head>
+<body class="bg-[#F0F6F8] font-sans">
+
+    <!-- OVERLAY -->
+    <div id="menu-overlay" class="fixed inset-0 bg-black/5 z-[996] opacity-0 pointer-events-none transition-opacity duration-500"></div>
+
+    <!-- CONTAINER -->
+    <div class="fixed top-6 right-6 lg:top-10 lg:right-12 z-[999] flex flex-col items-end">
+        
+        <!-- BOTÃO (Trigger) -->
+        <button id="menu-btn" aria-expanded="false" class="menu-trigger group flex items-center rounded-full bg-[#0C1016] p-1.5 transition-all duration-300 hover:scale-[1.02] active:scale-95">
+            <span class="pl-6 pr-4 text-xs font-bold uppercase tracking-widest text-[#F0F6F8] lg:pl-8 lg:pr-6 lg:text-sm">
+                <span class="relative block overflow-hidden h-5 w-[50px] lg:w-[60px]">
+                    <span id="txt-menu" class="absolute inset-0 flex items-center justify-center transition-transform duration-500 ease-bounce">Menu</span>
+                    <span id="txt-close" class="absolute inset-0 flex items-center justify-center translate-y-full transition-transform duration-500 ease-bounce">Close</span>
+                </span>
+            </span>
+            <span class="relative flex h-8 w-8 items-center justify-center rounded-full bg-[#1E242C] text-[#F0F6F8] lg:h-10 lg:w-10">
+                <span class="menu-trigger__dots relative h-full w-full" aria-hidden="true">
+                    <span class="menu-trigger__dot menu-trigger__dot--top"></span>
+                    <span class="menu-trigger__dot menu-trigger__dot--bottom"></span>
+                </span>
+            </span>
+        </button>
+
+        <!-- MENU (Navegação) -->
+        <nav id="nav-menu" class="mt-4 w-max max-w-[calc(100vw-48px)] bg-[#D9E0E3]/55 backdrop-blur-2xl backdrop-saturate-150 border border-white/45 rounded-[2.5rem] p-4 lg:p-6 shadow-[0_8px_32px_rgba(12,16,22,0.08)] origin-top-right transition-all duration-500 ease-bounce opacity-0 scale-90 translate-x-4 pointer-events-none">
+            <ul class="flex flex-col gap-1">
+                <li class="menu-item-enter" style="transition-delay: 0.1s;">
+                    <a href="index.html" class="group flex items-center gap-3 text-[clamp(28px,4.5vw,48px)] font-bold text-[#0C1016] px-5 py-3 lg:px-6 lg:py-4 rounded-3xl hover:bg-white transition-all duration-300 ease-out whitespace-nowrap max-w-full">
+                        <span class="w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden shrink-0">
+                            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </span>
+                        Home
+                    </a>
+                </li>
+                <li class="menu-item-enter" style="transition-delay: 0.15s;">
+                    <a href="about.html" class="group flex items-center gap-3 text-[clamp(28px,4.5vw,48px)] font-bold text-[#0C1016] px-5 py-3 lg:px-6 lg:py-4 rounded-3xl hover:bg-white transition-all duration-300 ease-out whitespace-nowrap max-w-full">
+                        <span class="w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden shrink-0">
+                            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </span>
+                        About
+                    </a>
+                </li>
+                <li class="menu-item-enter" style="transition-delay: 0.2s;">
+                    <a href="astrology-reading.html" class="group flex items-center gap-3 text-[clamp(28px,4.5vw,48px)] font-bold text-[#0C1016] px-5 py-3 lg:px-6 lg:py-4 rounded-3xl hover:bg-white transition-all duration-300 ease-out whitespace-nowrap max-w-full">
+                        <span class="w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden shrink-0">
+                            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </span>
+                        Astrology Reading
+                    </a>
+                </li>
+                <li class="menu-item-enter" style="transition-delay: 0.25s;">
+                    <a href="energy-healing.html" class="group flex items-center gap-3 text-[clamp(28px,4.5vw,48px)] font-bold text-[#0C1016] px-5 py-3 lg:px-6 lg:py-4 rounded-3xl hover:bg-white transition-all duration-300 ease-out whitespace-nowrap max-w-full">
+                        <span class="w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden shrink-0">
+                            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </span>
+                        Energy Healing
+                    </a>
+                </li>
+                <li class="menu-item-enter" style="transition-delay: 0.3s;">
+                    <a href="#contact" class="group flex items-center gap-3 text-[clamp(28px,4.5vw,48px)] font-bold text-[#0C1016] px-5 py-3 lg:px-6 lg:py-4 rounded-3xl hover:bg-white transition-all duration-300 ease-out whitespace-nowrap max-w-full">
+                        <span class="w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden shrink-0">
+                            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </span>
+                        Contact
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        const btn = document.getElementById('menu-btn');
+        const nav = document.getElementById('nav-menu');
+        const overlay = document.getElementById('menu-overlay');
+        const txtMenu = document.getElementById('txt-menu');
+        const txtClose = document.getElementById('txt-close');
+
+        let open = false;
+
+        btn.addEventListener('click', () => {
+            open = !open;
+            
+            // Toggle Classes do Painel
+            nav.classList.toggle('opacity-0', !open);
+            nav.classList.toggle('scale-90', !open);
+            nav.classList.toggle('scale-100', open);
+            nav.classList.toggle('translate-x-4', !open);
+            nav.classList.toggle('translate-x-0', open);
+            nav.classList.toggle('pointer-events-none', !open);
+            
+            overlay.classList.toggle('opacity-100', open);
+            overlay.classList.toggle('pointer-events-auto', open);
+            document.body.classList.toggle('menu-open', open);
+
+            // Animação de Texto e Dots
+            txtMenu.style.transform = open ? 'translateY(-100%)' : 'translateY(0)';
+            txtClose.style.transform = open ? 'translateY(0)' : 'translateY(100%)';
+            btn.classList.toggle('is-open', open);
+            btn.setAttribute('aria-expanded', open);
+        });
+
+        overlay.addEventListener('click', () => { if(open) btn.click(); });
+    </script>
+</body>
+</html>

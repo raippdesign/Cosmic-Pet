@@ -1,0 +1,50 @@
+---
+description: Regras base do Design System Cosmic Patch — tokens, identidade visual, acessibilidade e padrão de entrega
+alwaysApply: true
+---
+
+# Cosmic Patch — Rules Global
+
+## Objetivo
+
+Regra base para qualquer tarefa do projeto Cosmic Patch. Deve ser considerada antes de qualquer skill específica.
+
+## Quando usar
+
+Use sempre que for criar, clonar, revisar, refatorar ou polir qualquer parte do site.
+
+## Regra principal
+
+O projeto deve preservar o Design System do Cosmic Patch. Referências externas podem inspirar estrutura, animação, interação, ritmo, composição e microinterações, mas não devem substituir identidade visual, tokens, tipografia, cores, espaçamentos e linguagem do produto.
+
+## Prioridade de decisão
+
+1. Design System do projeto.
+2. Acessibilidade e performance.
+3. Responsividade.
+4. Clareza de código.
+5. Fidelidade ao efeito ou referência.
+6. Polimento visual.
+
+## Regras obrigatórias
+
+- Não alterar cores, fontes, radius, shadows, spacing scale ou tokens sem pedir aprovação.
+- Não criar estilos soltos se já existir token ou classe equivalente.
+- Não duplicar componentes se houver componente reutilizável.
+- Não adicionar biblioteca nova sem justificar.
+- Não quebrar mobile para melhorar desktop.
+- Não usar animações que prejudiquem leitura, navegação ou performance.
+- Respeitar prefers-reduced-motion.
+- Evitar CSS inline, exceto para valores dinâmicos realmente necessários.
+- Manter HTML semântico.
+- Garantir estados hover, focus, active e disabled quando houver interação.
+
+## Padrão de entrega esperado
+
+Ao finalizar qualquer tarefa, explique:
+
+1. O que foi alterado.
+2. Quais arquivos foram modificados.
+3. Quais tokens ou componentes foram usados.
+4. Como testar no desktop e no mobile.
+5. Se há algum risco, limitação ou dívida técnica.

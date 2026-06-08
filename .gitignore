@@ -1,0 +1,25 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.*
+
+# Dependencies (Gulp / npm futuro)
+node_modules/
+
+# Build output
+build/
+dist/
+
+# Editor — preferências locais
+.vscode/
+
+# Vídeos pesados (referência local; não versionar)
+*.mov
+*.mp4
+*.webm
+
+# Rascunhos pessoais na raiz
+anotcoes.md
